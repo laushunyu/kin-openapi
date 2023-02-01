@@ -257,7 +257,7 @@ func (g *Generator) generateWithoutSaving(parents []*theTypeInfo, t reflect.Type
 			schema.Format = "byte"
 		} else {
 			schema.Type = "array"
-			items, err := g.generateSchemaRefFor(parents, t.Elem(), name, tag)
+			items, err := g.generateSchemaRefFor(parents, t.Elem(), name, "")
 			if err != nil {
 				if _, ok := err.(*CycleError); ok && !g.opts.throwErrorOnCycle {
 					items = g.generateCycleSchemaRef(t.Elem(), schema)
@@ -273,7 +273,7 @@ func (g *Generator) generateWithoutSaving(parents []*theTypeInfo, t reflect.Type
 
 	case reflect.Map:
 		schema.Type = "object"
-		additionalProperties, err := g.generateSchemaRefFor(parents, t.Elem(), name, tag)
+		additionalProperties, err := g.generateSchemaRefFor(parents, t.Elem(), name, "")
 		if err != nil {
 			if _, ok := err.(*CycleError); ok && !g.opts.throwErrorOnCycle {
 				additionalProperties = g.generateCycleSchemaRef(t.Elem(), schema)
@@ -301,7 +301,7 @@ func (g *Generator) generateWithoutSaving(parents []*theTypeInfo, t reflect.Type
 				if !fieldInfo.HasJSONTag && g.opts.useAllExportedFields {
 					// Handle anonymous fields/embedded structs
 					if t.Field(fieldInfo.Index[0]).Anonymous {
-						ref, err := g.generateSchemaRefFor(parents, fType, fieldName, tag)
+						ref, err := g.generateSchemaRefFor(parents, fType, fieldName, "")
 						if err != nil {
 							if _, ok := err.(*CycleError); ok && !g.opts.throwErrorOnCycle {
 								ref = g.generateCycleSchemaRef(fType, schema)
